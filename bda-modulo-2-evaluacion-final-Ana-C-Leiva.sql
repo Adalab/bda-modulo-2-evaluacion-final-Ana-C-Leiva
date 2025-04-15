@@ -303,10 +303,50 @@ WHERE actor_id NOT IN (
 		WHERE category_id = (
 			SELECT
 			category_id
-			FROm category
+			FROM category
 			WHERE name = 'Horror')));
             
 -- Ejercicio 24 --
 -- mostrar: titulo de pelicula (tabla film)
 -- restriccion: categoria comedia (tablas category and film_category) y duración mayor a 180 minutos (tabla film)
 
+SELECT
+title AS Titulo
+FROM film
+WHERE film_id IN (
+	SELECT
+	film_id
+	FROM film_category
+	LEFT JOIN category
+		ON film_category.category_id = category.category_id
+	WHERE name = 'Comedy');
+    
+-- Ejercicio 25 --
+-- mostrar: actores - asumo que muestro Nombre, Apellido y actor_id
+-- restriccion: que hayan actuado juntos al menos una vez
+-- tablas actor y film_actor
+
+SELECT
+actor_id1,
+tabla2.Nombre1 AS Nombre1,
+tabla2.Apellido1 AS Apellido1,
+actor_id2,
+actor.first_name AS Nombre2,
+actor.last_name AS Apellido2
+FROM (
+	SELECT
+	actor_id1,
+	actor.first_name AS Nombre1,
+	actor.last_name AS Apellido1,
+	actor_id2
+	FROM (
+		SELECT DISTINCT
+		LEAST(a.actor_id, b.actor_id) AS actor_id1,
+		GREATEST(a.actor_id, b.actor_id) AS actor_id2
+		FROM film_actor AS a, film_actor AS b
+		WHERE a.actor_id <> b.actor_id
+		AND a.film_id = b.film_id) tabla1
+	LEFT JOIN actor
+		ON tabla1.actor_id1 = actor.actor_id) tabla2
+LEFT JOIN actor 
+	ON tabla2.actor_id2 = actor.actor_id;

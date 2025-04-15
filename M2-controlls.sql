@@ -244,3 +244,31 @@ WHERE actor_id NOT IN (
 			category_id
 			FROm category
 			WHERE name = 'Horror')));
+            
+-- 24 --
+SELECT
+film_id,
+category.name
+FROM film_category
+LEFT JOIN category
+	ON film_category.category_id = category.category_id
+WHERE name = 'Comedy';
+
+-- 25 --
+SELECT DISTINCT
+a.actor_ID AS actor_id1,
+b.actor_ID AS actor_id2,
+a.film_id -- conotrlando que tienen la misma pelicula
+FROM film_actor AS a, film_actor AS b
+WHERE a.actor_ID <> b.actor_ID
+AND a.film_id = b.film_id;
+
+SELECT DISTINCT
+LEAST(a.actor_id, b.actor_id) AS actor_id1,
+GREATEST(a.actor_id, b.actor_id) AS actor_id2,
+a.film_id
+FROM film_actor AS a, film_actor AS b
+WHERE a.actor_id <> b.actor_id
+AND a.film_id = b.film_id;
+
+-- CONTROLAR resultado manualmente
