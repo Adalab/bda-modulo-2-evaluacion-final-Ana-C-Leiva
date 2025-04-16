@@ -1,14 +1,16 @@
 USE sakila;
 
 -- Ejercicio 1 --
--- restricción: todos los nombres de las peliculas sin duplicados - tabla film
+-- mostrar: titulo pelicula
+-- restricción: sin duplicados - tabla film
 
 SELECT DISTINCT 
 title AS NombrePelicula
 FROM film;
 
 -- Ejercicio 2 --
--- restricción: nombre de todas las peliculas que tengan una clasificacion de "PG-13" - tabla film
+-- mostrar: titulo película
+-- restricción: que tengan una clasificacion de "PG-13" - tabla film
 
 SELECT
 title AS NombrePelicula
@@ -16,7 +18,7 @@ FROM film
 WHERE rating= "PG-13";
 
 -- Ejercicio 3 --
--- mostrar titulo y descripcion
+-- mostrar: titulo y descripcion
 -- restricción: descripcion que contenga la palabra "amazing" - tabla film
 
 SELECT
@@ -26,8 +28,8 @@ FROM film
 WHERE description LIKE '%amazing%';
 
 -- Ejercicio 4 --
--- mostrar titulo
--- restriccion que tenga duracion (length) mayor a 120 minutos - tabla film
+-- mostrar: titulo
+-- restriccion: que tenga duracion (length) mayor a 120 minutos - tabla film
 
 SELECT
 title AS Titulo
@@ -35,7 +37,7 @@ FROM film
 WHERE length > 120;
 
 -- Ejercicio 5 --
--- mostrar nombre (asumo que es nombre y apellido) agrego identificador
+-- mostrar: nombre (asumo que es nombre y apellido) agrego identificador
 -- de todos los actores y actrices - tabla actor
 
 SELECT
@@ -45,7 +47,7 @@ last_name AS Apellido
 FROM actor;
 
 -- Ejercicio 6 --
--- mostrar nombre y apellido
+-- mostrar: nombre y apellido
 -- restriccion: que tengan 'Gibson' en su apellido - tabla actor
 
 -- Si queremos que muestre apellidos que contengan solo Gibson o Gibson combinado con otros valores - control el mismo resultado que si imponogo = 'Gibson'
@@ -56,7 +58,7 @@ FROM actor
 WHERE last_name LIKE '%Gibson%';
 
 -- Ejercicio 7 --
--- mostrar nombre (asumo nombre y apellido)
+-- mostrar: nombre (asumo nombre y apellido)
 -- restricción: actor_id entre 10 y 20 (asumo intervalo cerrado - incluyo los extremos) - tabla actor
 
 SELECT
@@ -106,8 +108,9 @@ ORDER BY RecuentoAlquileres;
 -- mostrar: Recuento de alquileres por categoría (COUNT(distinct rental_id)) y nombre categoria
 -- CUATRO tablas: RENTAL (rental_id, film_id), INVENTORY (inventory_id, film_id), FILM_CATEGORY (film_id, category_id), CATEGORY (category_id, category_name)
 -- control: suma por categoría igual al total de tabla rental
+-- estoy mostrando la popularidad de las categorías
 
-SELECT DISTINCT
+SELECT
 category.name AS NombreCategoria,
 COUNT(DISTINCT rental.rental_id) AS RecuentoAlquieleres
 FROM rental
@@ -131,7 +134,8 @@ FROM film
 GROUP BY rating;
 
 -- Ejercicio 13 --
--- mostrar: nombre y apellido de actores de la pelicula Indian Love
+-- mostrar: nombre y apellido de actores 
+-- restricción: que actúen en la pelicula Indian Love
 -- 3 tablas: ACTOR (actor_id, first_name, last_name) FILM_ACTOR (film_id, actor_id) FILM (title, film_id) 
 
 SELECT
@@ -153,7 +157,6 @@ WHERE actor_id IN (
 -- mostrar titulo de pelicula
 -- restricción: palabras 'dog' o 'cat' en su descripción
 -- REGEXP: asegura que las apalabras dog y cat aparezcan como palabras aisladas \\b
-
 
 SELECT
 title AS Titulo
