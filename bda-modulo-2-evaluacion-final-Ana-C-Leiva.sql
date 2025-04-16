@@ -35,7 +35,7 @@ FROM film
 WHERE length > 120;
 
 -- Ejercicio 5 --
--- mostrar nombre (asumo que es nombre y apellido nombre y apellido) agrego identificador
+-- mostrar nombre (asumo que es nombre y apellido) agrego identificador
 -- de todos los actores y actrices - tabla actor
 
 SELECT
@@ -62,7 +62,6 @@ WHERE last_name LIKE '%Gibson%';
 SELECT
 first_name AS Nombre,
 last_name AS Apellido
--- actor_id (cuando lo incluyo controlo que corresponda los id con el rango)
 FROM actor
 WHERE actor_id BETWEEN 10 AND 20;
 
@@ -77,7 +76,8 @@ FROM film
 WHERE rating NOT IN ('R','PG-13');
 
 -- Ejercicio 9 --
--- mostrar: recuento (COUNT(distinct title)) clasificacion (rating) -- tabla film
+-- mostrar: recuento (COUNT(distinct title)) y clasificacion (rating) -- tabla film
+-- control manual: la suma de las peliculas por categorias da el total de peliculas en la tabla film
 
 SELECT
 rating AS Clasificacion,
@@ -89,6 +89,7 @@ GROUP BY rating;
 -- mostrar: recuento de alquileres por cliente (count distinct rent_id), id cliente, nombre y apellido -- tablas rental y customer
 -- RIGHT JOIN: porque quiero quedarme con el recuento de los alquileres por cliente, incluso si no hubiese alquilado ninguna película
 -- comprbando: hice con LEFT y RIGHT y da el mismo resultado. Segundo control: no existen customer_id que no pertenezcan a la tabla rental
+	-- No existen clientes que no hayan alquilado
 
 SELECT 
 customer.customer_id AS ClienteID,
@@ -104,6 +105,7 @@ ORDER BY RecuentoAlquileres;
 -- Ejercicio 11 --
 -- mostrar: Recuento de alquileres por categoría (COUNT(distinct rental_id)) y nombre categoria
 -- CUATRO tablas: RENTAL (rental_id, film_id), INVENTORY (inventory_id, film_id), FILM_CATEGORY (film_id, category_id), CATEGORY (category_id, category_name)
+-- control: suma por categoría igual al total de tabla rental
 
 SELECT DISTINCT
 category.name AS NombreCategoria,
@@ -150,15 +152,17 @@ WHERE actor_id IN (
 -- Ejercicio 14 --
 -- mostrar titulo de pelicula
 -- restricción: palabras 'dog' o 'cat' en su descripción
+-- REGEXP: asegura que las apalabras dog y cat aparezcan como palabras aisladas \\b
+
 
 SELECT
 title AS Titulo
 FROM film
-WHERE description REGEXP '\\bdog\\b' OR description REGEXP '\\bcat\\b'; -- asegura que las apalabras dog y cat aparezcan como palabras aisladas \\b
+WHERE description REGEXP '\\bdog\\b' OR description REGEXP '\\bcat\\b'; 
 
 -- Ejercicio 15 --
 -- mostrar: titulo de peliculas
--- restricción: que hayan sido lanzadas entre le año 2005 y 2010 -- tabla film
+-- restricción: que hayan sido lanzadas entre el año 2005 y 2010 -- tabla film
 -- control: solo parecen haber peliculas lanzadas en 2006
 
 SELECT
@@ -169,7 +173,8 @@ WHERE release_year BETWEEN 2005 AND 2010;
 -- Ejercicio 16 --
 -- mostrar: titulo de peliculas
 -- restricción: peliculas que pertenezcan a la misma categoría que Family - tablas film y film_category
--- No parece haber ninguna pelicula con el nombre 'Family' pero parece haber peliculas con la palabra family dentro 
+-- No parece haber ninguna pelicula con el nombre 'Family' pero parece haber peliculas con la palabra family dentro
+-- contro: corrí el codigo con un nombre de pelicula que si existe y funciona
 
 SELECT
 title AS Titulo
@@ -190,7 +195,7 @@ WHERE film_id IN (
             
 -- Ejercicio 17 -- 
 -- mostrar: titulo de pelicula
--- restricción: rating = R y duración (leno sabemogth) > 120 minutos - tabla film
+-- restricción: rating = R y duración (length) > 120 minutos - tabla film
 
 SELECT
 title AS Titulo
@@ -202,7 +207,7 @@ WHERE rating = 'R' AND length > 120;
 -- ---------------------------------------------
 
 -- Ejercicio 18 --
--- nombre y appelido de actores
+-- mostrar: nombre y appelido de actores
 -- restricción: aparece en más de 10 películas - tablas actor y film_actor
 -- control agregando a.CantidadPeliculas en SELECT - ok
 -- RIGHT JOIN: porque quiero solo los nombres de los actores que cumplan con la condición - No hay actores con menos de 10 peliculas
@@ -217,7 +222,7 @@ RIGHT JOIN (
     COUNT(DISTINCT film_id) AS CantidadPeliculas
     FROM film_actor
     GROUP BY actor_id
-    HAVING COUNT(DISTINCT film_id) >10
+    HAVING  CantidadPeliculas > 10
 ) a
 	ON actor.actor_id = a.actor_id
 ORDER BY a.CantidadPeliculas;
@@ -233,7 +238,7 @@ WHERE actor_id NOT IN (
 	SELECT DISTINCT 
     actor_id
     FROM film_actor
-); -- NO hay ningún actor en la tabla actors que no esté en alguna película en la tabla film_actor
+); -- NO hay ningún actor en la tabla actor que no esté en alguna película en la tabla film_actor
 
 -- Ejercicio 20 --
 -- mostrar: nombre de la categoría (category.name) y promedio duración (length)
@@ -319,8 +324,9 @@ WHERE film_id IN (
 	FROM film_category
 	LEFT JOIN category
 		ON film_category.category_id = category.category_id
-	WHERE name = 'Comedy');
-    
+	WHERE name = 'Comedy') 
+AND length > 180;
+
 -- Ejercicio 25 --
 -- mostrar: actores - asumo que muestro Nombre, Apellido y actor_id
 -- restriccion: que hayan actuado juntos al menos una vez

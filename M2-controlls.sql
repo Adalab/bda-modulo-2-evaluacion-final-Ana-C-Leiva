@@ -46,6 +46,7 @@ WHERE customer_id NOT IN (
     FROM rental);
 
 -- 11 --
+--  suma por categoría: 16044 - suma en cantidad de alquileres en rental 16044
 SELECT DISTINCT
 b.NombreCategoria,
 COUNT(Distinct rental_id) AS RecuentoAlquileres
@@ -255,6 +256,7 @@ LEFT JOIN category
 WHERE name = 'Comedy';
 
 -- 25 --
+-- primer intento (tenia combinaciones repetidas cuando no importaba el orden
 SELECT DISTINCT
 a.actor_ID AS actor_id1,
 b.actor_ID AS actor_id2,
@@ -271,4 +273,16 @@ FROM film_actor AS a, film_actor AS b
 WHERE a.actor_id <> b.actor_id
 AND a.film_id = b.film_id;
 
--- CONTROLAR resultado manualmente
+SELECT
+actor_id1,
+actor_id2,
+COUNT(DISTINCT film_id)
+FROM (
+SELECT DISTINCT
+LEAST(a.actor_id, b.actor_id) AS actor_id1,
+GREATEST(a.actor_id, b.actor_id) AS actor_id2,
+a.film_id
+FROM film_actor AS a, film_actor AS b
+WHERE a.actor_id <> b.actor_id
+AND a.film_id = b.film_id) c
+GROUP BY actor_id1, actor_id2;
